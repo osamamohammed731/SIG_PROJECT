@@ -4,6 +4,14 @@
  */
 package SIG.VIEW;
 
+import SIG.CONTROLLER.Controller;
+import SIG.MODEL.InvoiceHeader;
+import SIG.MODEL.InvoiceHeaderTableModel;
+import java.util.ArrayList;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+
+
 /**
  *
  * @author Osama
@@ -14,6 +22,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
      * Creates new form InvoiceFrame
      */
     public InvoiceFrame() {
+        controller = new Controller(this);
         initComponents();
     }
 
@@ -27,14 +36,19 @@ public class InvoiceFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        headTable = new javax.swing.JTable();
+        headTable.getSelectionModel().addListSelectionListener(controller);
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        invoiceTable = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        newInvBtn = new javax.swing.JButton();
+        newInvBtn.addActionListener(controller);
+        delInvBtn = new javax.swing.JButton();
+        delInvBtn.addActionListener(controller);
+        newItemBtn = new javax.swing.JButton();
+        newItemBtn.addActionListener(controller);
+        delItemBtn = new javax.swing.JButton();
+        delItemBtn.addActionListener(controller);
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -46,47 +60,49 @@ public class InvoiceFrame extends javax.swing.JFrame {
         invTotal = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        loadFileMenu = new javax.swing.JMenuItem();
+        loadFileMenu.addActionListener(controller);
+        saveFileMenu = new javax.swing.JMenuItem();
+        saveFileMenu.addActionListener(controller);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        headTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "No.", "Date", "Customer", "Total"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
             },
             new String [] {
-                "No.", "Item Name", "Item Price", "Count", "Total Price"
+
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane1.setViewportView(headTable);
+        if (headTable.getColumnModel().getColumnCount() > 0) {
+            headTable.getColumnModel().getColumn(0).setHeaderValue("No.");
+            headTable.getColumnModel().getColumn(1).setHeaderValue("Date");
+            headTable.getColumnModel().getColumn(2).setHeaderValue("Customer");
+            headTable.getColumnModel().getColumn(3).setHeaderValue("Total");
+        }
+
+        invoiceTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane2.setViewportView(invoiceTable);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         jLabel1.setText("Invoices Table");
 
-        jButton1.setText("New Invoice");
+        newInvBtn.setText("New Invoice");
 
-        jButton2.setText("Delete Invoice");
+        delInvBtn.setText("Delete Invoice");
 
-        jButton3.setText("New Item");
+        newItemBtn.setText("New Item");
 
-        jButton4.setText("Delete Item");
+        delItemBtn.setText("Delete Item");
 
         jLabel2.setText("Invoice Number :");
 
@@ -116,15 +132,15 @@ public class InvoiceFrame extends javax.swing.JFrame {
 
         jMenu1.setText("File");
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem1.setMnemonic('L');
-        jMenuItem1.setText("Load File");
-        jMenu1.add(jMenuItem1);
+        loadFileMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_L, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        loadFileMenu.setMnemonic('L');
+        loadFileMenu.setText("Load File");
+        jMenu1.add(loadFileMenu);
 
-        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem2.setMnemonic('S');
-        jMenuItem2.setText("Save File");
-        jMenu1.add(jMenuItem2);
+        saveFileMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        saveFileMenu.setMnemonic('S');
+        saveFileMenu.setText("Save File");
+        jMenu1.add(saveFileMenu);
 
         jMenuBar1.add(jMenu1);
 
@@ -161,13 +177,13 @@ public class InvoiceFrame extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(32, 32, 32)
-                .addComponent(jButton1)
+                .addComponent(newInvBtn)
                 .addGap(217, 217, 217)
-                .addComponent(jButton2)
+                .addComponent(delInvBtn)
                 .addGap(154, 154, 154)
-                .addComponent(jButton3)
+                .addComponent(newItemBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton4)
+                .addComponent(delItemBtn)
                 .addGap(56, 56, 56))
         );
 
@@ -204,10 +220,10 @@ public class InvoiceFrame extends javax.swing.JFrame {
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(newInvBtn)
+                    .addComponent(delInvBtn)
+                    .addComponent(newItemBtn)
+                    .addComponent(delItemBtn))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
 
@@ -241,6 +257,7 @@ public class InvoiceFrame extends javax.swing.JFrame {
         }
         //</editor-fold>
 
+       
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -249,15 +266,16 @@ public class InvoiceFrame extends javax.swing.JFrame {
         });
     }
 
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel custName;
+    private javax.swing.JButton delInvBtn;
+    private javax.swing.JButton delItemBtn;
+    private javax.swing.JTable headTable;
     private javax.swing.JLabel invDate;
     private javax.swing.JLabel invNum;
     private javax.swing.JLabel invTotal;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JTable invoiceTable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -266,11 +284,54 @@ public class InvoiceFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
+    private javax.swing.JMenuItem loadFileMenu;
+    private javax.swing.JButton newInvBtn;
+    private javax.swing.JButton newItemBtn;
+    private javax.swing.JMenuItem saveFileMenu;
     // End of variables declaration//GEN-END:variables
+private Controller controller;
+private InvoiceHeaderTableModel headerTableModel;
+private ArrayList<InvoiceHeader> invoiceHeaderList;
+
+    public Controller getController() {
+        return controller;
+    }
+
+    public JTable getHeadTable() {
+        return headTable;
+    }
+
+    public JTable getInvoiceTable() {
+        return invoiceTable;
+    }
+
+    public void setCustName(JLabel custName) {
+        this.custName = custName;
+    }
+
+    public void setInvDate(JLabel invDate) {
+        this.invDate = invDate;
+    }
+
+    public void setInvNum(JLabel invNum) {
+        this.invNum = invNum;
+    }
+
+    public void setInvTotal(JLabel invTotal) {
+        this.invTotal = invTotal;
+    }
+
+
+    public ArrayList<InvoiceHeader> getInvoiceHeaderList() {
+        return invoiceHeaderList;
+    }
+
+    public void setInvoiceHeaderList(ArrayList<InvoiceHeader> invoiceHeaderList) {
+        this.invoiceHeaderList = invoiceHeaderList;
+        headerTableModel=new InvoiceHeaderTableModel(invoiceHeaderList);
+        this.headTable.setModel(headerTableModel);
+        
+    }
 }

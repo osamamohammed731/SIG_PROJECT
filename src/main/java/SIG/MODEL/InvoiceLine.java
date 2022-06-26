@@ -1,12 +1,11 @@
-
 package SIG.MODEL;
 
-
 public class InvoiceLine {
-   private InvoiceHeader invoice;
-   private String name;
-   private double price;
-   private int count;
+
+    private InvoiceHeader invoice;
+    private String name;
+    private double price;
+    private int count;
 
     public InvoiceLine(InvoiceHeader invoice, String name, double price, int count) {
         this.invoice = invoice;
@@ -43,8 +42,17 @@ public class InvoiceLine {
         return price;
     }
 
+    public double getLineTotal() {
+        return price * count;
+    }
+
     public void setPrice(double price) {
         this.price = price;
     }
-  
+
+    @Override
+    public String toString() {
+        return "InvoiceLine{" + "invoice=" + invoice + ", name=" + name + ", price=" + price + ", count=" + count + ", Line total=" + getLineTotal() + '}';
+    }
+
 }
